@@ -20332,6 +20332,73 @@ var h3d_impl_RenderFlag = $hxEnums["h3d.impl.RenderFlag"] = { __ename__ : true, 
 	,CameraHandness: {_hx_index:0,__enum__:"h3d.impl.RenderFlag",toString:$estr}
 };
 h3d_impl_RenderFlag.__empty_constructs__ = [h3d_impl_RenderFlag.CameraHandness];
+var haxe_IMap = function() { };
+$hxClasses["haxe.IMap"] = haxe_IMap;
+haxe_IMap.__name__ = "haxe.IMap";
+haxe_IMap.__isInterface__ = true;
+var haxe_ds_StringMap = function() {
+	this.h = { };
+};
+$hxClasses["haxe.ds.StringMap"] = haxe_ds_StringMap;
+haxe_ds_StringMap.__name__ = "haxe.ds.StringMap";
+haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
+haxe_ds_StringMap.prototype = {
+	setReserved: function(key,value) {
+		if(this.rh == null) {
+			this.rh = { };
+		}
+		this.rh["$" + key] = value;
+	}
+	,getReserved: function(key) {
+		if(this.rh == null) {
+			return null;
+		} else {
+			return this.rh["$" + key];
+		}
+	}
+	,existsReserved: function(key) {
+		if(this.rh == null) {
+			return false;
+		}
+		return this.rh.hasOwnProperty("$" + key);
+	}
+	,remove: function(key) {
+		if(__map_reserved[key] != null) {
+			key = "$" + key;
+			if(this.rh == null || !this.rh.hasOwnProperty(key)) {
+				return false;
+			}
+			delete(this.rh[key]);
+			return true;
+		} else {
+			if(!this.h.hasOwnProperty(key)) {
+				return false;
+			}
+			delete(this.h[key]);
+			return true;
+		}
+	}
+	,keys: function() {
+		return HxOverrides.iter(this.arrayKeys());
+	}
+	,arrayKeys: function() {
+		var out = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) {
+			out.push(key);
+		}
+		}
+		if(this.rh != null) {
+			for( var key in this.rh ) {
+			if(key.charCodeAt(0) == 36) {
+				out.push(key.substr(1));
+			}
+			}
+		}
+		return out;
+	}
+	,__class__: haxe_ds_StringMap
+};
 var h3d_impl_InputNames = function(names) {
 	this.id = h3d_impl_InputNames.UID++;
 	this.names = names;
@@ -24049,6 +24116,35 @@ h3d_mat_Stencil.prototype = {
 		this.set_reference(this.maskBits >> 16 & 255);
 	}
 	,__class__: h3d_mat_Stencil
+};
+var haxe_ds_IntMap = function() {
+	this.h = { };
+};
+$hxClasses["haxe.ds.IntMap"] = haxe_ds_IntMap;
+haxe_ds_IntMap.__name__ = "haxe.ds.IntMap";
+haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
+haxe_ds_IntMap.prototype = {
+	remove: function(key) {
+		if(!this.h.hasOwnProperty(key)) {
+			return false;
+		}
+		delete(this.h[key]);
+		return true;
+	}
+	,keys: function() {
+		var a = [];
+		for( var key in this.h ) (this.h.hasOwnProperty(key) ? a.push(key | 0) : null);
+		return HxOverrides.iter(a);
+	}
+	,iterator: function() {
+		return { ref : this.h, it : this.keys(), hasNext : function() {
+			return this.it.hasNext();
+		}, next : function() {
+			var i = this.it.next();
+			return this.ref[i];
+		}};
+	}
+	,__class__: haxe_ds_IntMap
 };
 var hxd_PixelFormat = $hxEnums["hxd.PixelFormat"] = { __ename__ : true, __constructs__ : ["ARGB","BGRA","RGBA","RGBA16F","RGBA32F","R8","R16F","R32F","RG8","RG16F","RG32F","RGB8","RGB16F","RGB32F","SRGB","SRGB_ALPHA","RGB10A2","RG11B10UF","S3TC"]
 	,ARGB: {_hx_index:0,__enum__:"hxd.PixelFormat",toString:$estr}
@@ -35698,10 +35794,6 @@ h3d_shader_VolumeDecal.prototype = $extend(hxsl_Shader.prototype,{
 	}
 	,__class__: h3d_shader_VolumeDecal
 });
-var haxe_IMap = function() { };
-$hxClasses["haxe.IMap"] = haxe_IMap;
-haxe_IMap.__name__ = "haxe.IMap";
-haxe_IMap.__isInterface__ = true;
 var haxe_EntryPoint = function() { };
 $hxClasses["haxe.EntryPoint"] = haxe_EntryPoint;
 haxe_EntryPoint.__name__ = "haxe.EntryPoint";
@@ -37040,35 +37132,6 @@ haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
 	}
 	,__class__: haxe_ds_EnumValueMap
 });
-var haxe_ds_IntMap = function() {
-	this.h = { };
-};
-$hxClasses["haxe.ds.IntMap"] = haxe_ds_IntMap;
-haxe_ds_IntMap.__name__ = "haxe.ds.IntMap";
-haxe_ds_IntMap.__interfaces__ = [haxe_IMap];
-haxe_ds_IntMap.prototype = {
-	remove: function(key) {
-		if(!this.h.hasOwnProperty(key)) {
-			return false;
-		}
-		delete(this.h[key]);
-		return true;
-	}
-	,keys: function() {
-		var a = [];
-		for( var key in this.h ) (this.h.hasOwnProperty(key) ? a.push(key | 0) : null);
-		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i];
-		}};
-	}
-	,__class__: haxe_ds_IntMap
-};
 var haxe_ds_List = function() {
 	this.length = 0;
 };
@@ -37182,69 +37245,6 @@ haxe_ds__$StringMap_StringMapIterator.prototype = {
 		}
 	}
 	,__class__: haxe_ds__$StringMap_StringMapIterator
-};
-var haxe_ds_StringMap = function() {
-	this.h = { };
-};
-$hxClasses["haxe.ds.StringMap"] = haxe_ds_StringMap;
-haxe_ds_StringMap.__name__ = "haxe.ds.StringMap";
-haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
-haxe_ds_StringMap.prototype = {
-	setReserved: function(key,value) {
-		if(this.rh == null) {
-			this.rh = { };
-		}
-		this.rh["$" + key] = value;
-	}
-	,getReserved: function(key) {
-		if(this.rh == null) {
-			return null;
-		} else {
-			return this.rh["$" + key];
-		}
-	}
-	,existsReserved: function(key) {
-		if(this.rh == null) {
-			return false;
-		}
-		return this.rh.hasOwnProperty("$" + key);
-	}
-	,remove: function(key) {
-		if(__map_reserved[key] != null) {
-			key = "$" + key;
-			if(this.rh == null || !this.rh.hasOwnProperty(key)) {
-				return false;
-			}
-			delete(this.rh[key]);
-			return true;
-		} else {
-			if(!this.h.hasOwnProperty(key)) {
-				return false;
-			}
-			delete(this.h[key]);
-			return true;
-		}
-	}
-	,keys: function() {
-		return HxOverrides.iter(this.arrayKeys());
-	}
-	,arrayKeys: function() {
-		var out = [];
-		for( var key in this.h ) {
-		if(this.h.hasOwnProperty(key)) {
-			out.push(key);
-		}
-		}
-		if(this.rh != null) {
-			for( var key in this.rh ) {
-			if(key.charCodeAt(0) == 36) {
-				out.push(key.substr(1));
-			}
-			}
-		}
-		return out;
-	}
-	,__class__: haxe_ds_StringMap
 };
 var haxe_ds__$Vector_Vector_$Impl_$ = {};
 $hxClasses["haxe.ds._Vector.Vector_Impl_"] = haxe_ds__$Vector_Vector_$Impl_$;
@@ -40292,11 +40292,11 @@ var hxd_Pixels = function(width,height,bytes,format,offset) {
 	this.bytes = bytes;
 	this.set_innerFormat(format);
 	this.offset = offset;
-	var i = 0;
-	if(i == null) {
-		i = 0;
+	var i1 = 0;
+	if(i1 == null) {
+		i1 = 0;
 	}
-	var this1 = i;
+	var this1 = i1;
 	this.flags = this1;
 };
 $hxClasses["hxd.Pixels"] = hxd_Pixels;
@@ -41302,6 +41302,26 @@ var hxd_SystemValue = $hxEnums["hxd.SystemValue"] = { __ename__ : true, __constr
 	,IsMobile: {_hx_index:2,__enum__:"hxd.SystemValue",toString:$estr}
 };
 hxd_SystemValue.__empty_constructs__ = [hxd_SystemValue.IsTouch,hxd_SystemValue.IsWindowed,hxd_SystemValue.IsMobile];
+var js__$Boot_HaxeError = function(val) {
+	Error.call(this);
+	this.val = val;
+	if(Error.captureStackTrace) {
+		Error.captureStackTrace(this,js__$Boot_HaxeError);
+	}
+};
+$hxClasses["js._Boot.HaxeError"] = js__$Boot_HaxeError;
+js__$Boot_HaxeError.__name__ = "js._Boot.HaxeError";
+js__$Boot_HaxeError.wrap = function(val) {
+	if(((val) instanceof Error)) {
+		return val;
+	} else {
+		return new js__$Boot_HaxeError(val);
+	}
+};
+js__$Boot_HaxeError.__super__ = Error;
+js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+	__class__: js__$Boot_HaxeError
+});
 var hxd_Timer = function() { };
 $hxClasses["hxd.Timer"] = hxd_Timer;
 hxd_Timer.__name__ = "hxd.Timer";
@@ -41674,26 +41694,6 @@ hxd_Window.prototype = {
 	}
 	,__class__: hxd_Window
 };
-var js__$Boot_HaxeError = function(val) {
-	Error.call(this);
-	this.val = val;
-	if(Error.captureStackTrace) {
-		Error.captureStackTrace(this,js__$Boot_HaxeError);
-	}
-};
-$hxClasses["js._Boot.HaxeError"] = js__$Boot_HaxeError;
-js__$Boot_HaxeError.__name__ = "js._Boot.HaxeError";
-js__$Boot_HaxeError.wrap = function(val) {
-	if(((val) instanceof Error)) {
-		return val;
-	} else {
-		return new js__$Boot_HaxeError(val);
-	}
-};
-js__$Boot_HaxeError.__super__ = Error;
-js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
-	__class__: js__$Boot_HaxeError
-});
 var hxd_System = function() { };
 $hxClasses["hxd.System"] = hxd_System;
 hxd_System.__name__ = "hxd.System";
@@ -41764,7 +41764,7 @@ hxd_System.setNativeCursor = function(c) {
 			tmp = cur.alloc[cur.frameIndex];
 			break;
 		case 6:
-			var _g2 = c.f;
+			var _g11 = c.f;
 			throw new js__$Boot_HaxeError("assert");
 		}
 		canvas.style.cursor = tmp;
@@ -43695,19 +43695,19 @@ hxd_fmt_hmd_Reader.prototype = {
 				var k7 = _g61++;
 				var o = new hxd_fmt_hmd_AnimationObject();
 				o.name = this.readCachedName();
-				var i = this.i.readByte();
-				if(i == null) {
-					i = 0;
+				var i1 = this.i.readByte();
+				if(i1 == null) {
+					i1 = 0;
 				}
-				var this2 = i;
-				o.flags = this2;
+				var this11 = i1;
+				o.flags = this11;
 				a.objects.push(o);
 				if((o.flags & 1 << hxd_fmt_hmd_AnimationFlag.HasProps._hx_index) != 0) {
 					var _g62 = [];
 					var _g72 = 0;
 					var _g8 = this.i.readByte();
 					while(_g72 < _g8) {
-						var i1 = _g72++;
+						var i = _g72++;
 						_g62.push(this.readName());
 					}
 					o.props = _g62;
@@ -51541,13 +51541,13 @@ hxsl_Dce.prototype = {
 			var _g111 = _g.op;
 			switch(_g111._hx_index) {
 			case 4:
-				var _g27 = _g12.t;
-				var _g26 = _g12.p;
-				var _g25 = _g12.e;
-				switch(_g25._hx_index) {
+				var _g16 = _g12.t;
+				var _g15 = _g12.p;
+				var _g14 = _g12.e;
+				switch(_g14._hx_index) {
 				case 1:
 					var e1 = _g13;
-					var v1 = _g25.v;
+					var v1 = _g14.v;
 					var v2 = this.get(v1);
 					writeTo.push(v2);
 					this.check(e1,writeTo,isAffected);
@@ -51557,14 +51557,14 @@ hxsl_Dce.prototype = {
 					}
 					break;
 				case 9:
-					var _g30 = _g25.regs;
-					var _g29 = _g25.e;
-					var _g33 = _g29.t;
-					var _g32 = _g29.p;
-					var _g31 = _g29.e;
-					if(_g31._hx_index == 1) {
+					var _g19 = _g14.regs;
+					var _g18 = _g14.e;
+					var _g22 = _g18.t;
+					var _g21 = _g18.p;
+					var _g20 = _g18.e;
+					if(_g20._hx_index == 1) {
 						var e2 = _g13;
-						var v3 = _g31.v;
+						var v3 = _g20.v;
 						var v4 = this.get(v3);
 						writeTo.push(v4);
 						this.check(e2,writeTo,isAffected);
@@ -51591,14 +51591,14 @@ hxsl_Dce.prototype = {
 				}
 				break;
 			case 20:
-				var _g14 = _g111.op;
-				var _g17 = _g12.t;
-				var _g16 = _g12.p;
-				var _g15 = _g12.e;
-				switch(_g15._hx_index) {
+				var _g24 = _g111.op;
+				var _g27 = _g12.t;
+				var _g26 = _g12.p;
+				var _g25 = _g12.e;
+				switch(_g25._hx_index) {
 				case 1:
 					var e5 = _g13;
-					var v5 = _g15.v;
+					var v5 = _g25.v;
 					var v6 = this.get(v5);
 					writeTo.push(v6);
 					this.check(e5,writeTo,isAffected);
@@ -51608,14 +51608,14 @@ hxsl_Dce.prototype = {
 					}
 					break;
 				case 9:
-					var _g20 = _g15.regs;
-					var _g19 = _g15.e;
-					var _g23 = _g19.t;
-					var _g22 = _g19.p;
-					var _g21 = _g19.e;
-					if(_g21._hx_index == 1) {
+					var _g30 = _g25.regs;
+					var _g29 = _g25.e;
+					var _g33 = _g29.t;
+					var _g32 = _g29.p;
+					var _g31 = _g29.e;
+					if(_g31._hx_index == 1) {
 						var e6 = _g13;
-						var v7 = _g21.v;
+						var v7 = _g31.v;
 						var v8 = this.get(v7);
 						writeTo.push(v8);
 						this.check(e6,writeTo,isAffected);
@@ -51826,10 +51826,10 @@ hxsl_Dce.prototype = {
 				}
 			}
 			this.check(e21,affect,isAffected);
-			var _g18 = 0;
-			var _g24 = len;
-			while(_g18 < _g24) {
-				var i1 = _g18++;
+			var _g17 = 0;
+			var _g23 = len;
+			while(_g17 < _g23) {
+				var i1 = _g17++;
 				var v11 = affect[i1];
 				if(isAffected.indexOf(v11) < 0) {
 					isAffected.push(v11);
@@ -51898,12 +51898,12 @@ hxsl_Dce.prototype = {
 			var _g10 = _g.op;
 			switch(_g10._hx_index) {
 			case 4:
-				var _g26 = _g11.t;
-				var _g25 = _g11.p;
-				var _g24 = _g11.e;
-				switch(_g24._hx_index) {
+				var _g15 = _g11.t;
+				var _g14 = _g11.p;
+				var _g13 = _g11.e;
+				switch(_g13._hx_index) {
 				case 1:
-					var v = _g24.v;
+					var v = _g13.v;
 					if(!this.get(v).used) {
 						return { e : hxsl_TExprDef.TConst(hxsl_Const.CNull), t : e.t, p : e.p};
 					} else {
@@ -51913,13 +51913,13 @@ hxsl_Dce.prototype = {
 					}
 					break;
 				case 9:
-					var _g29 = _g24.regs;
-					var _g28 = _g24.e;
-					var _g32 = _g28.t;
-					var _g31 = _g28.p;
-					var _g30 = _g28.e;
-					if(_g30._hx_index == 1) {
-						var v1 = _g30.v;
+					var _g18 = _g13.regs;
+					var _g17 = _g13.e;
+					var _g21 = _g17.t;
+					var _g20 = _g17.p;
+					var _g19 = _g17.e;
+					if(_g19._hx_index == 1) {
+						var v1 = _g19.v;
 						if(!this.get(v1).used) {
 							return { e : hxsl_TExprDef.TConst(hxsl_Const.CNull), t : e.t, p : e.p};
 						} else {
@@ -51940,13 +51940,13 @@ hxsl_Dce.prototype = {
 				}
 				break;
 			case 20:
-				var _g13 = _g10.op;
-				var _g16 = _g11.t;
-				var _g15 = _g11.p;
-				var _g14 = _g11.e;
-				switch(_g14._hx_index) {
+				var _g23 = _g10.op;
+				var _g26 = _g11.t;
+				var _g25 = _g11.p;
+				var _g24 = _g11.e;
+				switch(_g24._hx_index) {
 				case 1:
-					var v2 = _g14.v;
+					var v2 = _g24.v;
 					if(!this.get(v2).used) {
 						return { e : hxsl_TExprDef.TConst(hxsl_Const.CNull), t : e.t, p : e.p};
 					} else {
@@ -51956,13 +51956,13 @@ hxsl_Dce.prototype = {
 					}
 					break;
 				case 9:
-					var _g19 = _g14.regs;
-					var _g18 = _g14.e;
-					var _g22 = _g18.t;
-					var _g21 = _g18.p;
-					var _g20 = _g18.e;
-					if(_g20._hx_index == 1) {
-						var v3 = _g20.v;
+					var _g29 = _g24.regs;
+					var _g28 = _g24.e;
+					var _g32 = _g28.t;
+					var _g31 = _g28.p;
+					var _g30 = _g28.e;
+					if(_g30._hx_index == 1) {
+						var v3 = _g30.v;
 						if(!this.get(v3).used) {
 							return { e : hxsl_TExprDef.TConst(hxsl_Const.CNull), t : e.t, p : e.p};
 						} else {
@@ -55970,10 +55970,10 @@ hxsl_GlslOut.prototype = {
 				break;
 			case 6:
 				if(_g11._hx_index == 5) {
-					var _g6 = _g11.t;
+					var _g7 = _g11.t;
 					if(_g2._hx_index == 5) {
-						var _g8 = _g2.t;
-						var _g7 = _g2.size;
+						var _g9 = _g2.t;
+						var _g8 = _g2.size;
 						var n1 = _g11.size;
 						this.buf.b += Std.string("vec" + n1 + "(");
 						var v12;
@@ -56078,10 +56078,10 @@ hxsl_GlslOut.prototype = {
 				break;
 			case 8:
 				if(_g11._hx_index == 5) {
-					var _g10 = _g11.t;
+					var _g28 = _g11.t;
 					if(_g2._hx_index == 5) {
-						var _g12 = _g2.t;
-						var _g111 = _g2.size;
+						var _g30 = _g2.t;
+						var _g29 = _g2.size;
 						var n3 = _g11.size;
 						this.buf.b += Std.string("vec" + n3 + "(");
 						var v18;
@@ -56132,10 +56132,10 @@ hxsl_GlslOut.prototype = {
 				break;
 			case 9:
 				if(_g11._hx_index == 5) {
-					var _g14 = _g11.t;
+					var _g111 = _g11.t;
 					if(_g2._hx_index == 5) {
-						var _g16 = _g2.t;
-						var _g15 = _g2.size;
+						var _g13 = _g2.t;
+						var _g12 = _g2.size;
 						var n4 = _g11.size;
 						this.buf.b += Std.string("vec" + n4 + "(");
 						var v21;
@@ -56186,10 +56186,10 @@ hxsl_GlslOut.prototype = {
 				break;
 			case 10:
 				if(_g11._hx_index == 5) {
-					var _g28 = _g11.t;
+					var _g31 = _g11.t;
 					if(_g2._hx_index == 5) {
-						var _g30 = _g2.t;
-						var _g29 = _g2.size;
+						var _g5 = _g2.t;
+						var _g4 = _g2.size;
 						var n5 = _g11.size;
 						this.buf.b += Std.string("vec" + n5 + "(");
 						var v24;
@@ -56250,7 +56250,7 @@ hxsl_GlslOut.prototype = {
 				if(e.t != hxsl_Type.TInt) {
 					var tmp1;
 					if(op._hx_index == 20) {
-						var _g4 = op.op;
+						var _g6 = op.op;
 						tmp1 = true;
 					} else {
 						tmp1 = false;
@@ -56280,7 +56280,7 @@ hxsl_GlslOut.prototype = {
 									this.decl("vec3 m3x4mult( vec3 v, _mat3x4 m) { vec4 ve = vec4(v,1.0); return vec3(dot(m.a,ve),dot(m.b,ve),dot(m.c,ve)); }");
 									var tmp2;
 									if(op._hx_index == 20) {
-										var _g5 = op.op;
+										var _g10 = op.op;
 										tmp2 = true;
 									} else {
 										tmp2 = false;
@@ -56331,7 +56331,7 @@ hxsl_GlslOut.prototype = {
 					if(e.t != hxsl_Type.TInt) {
 						var tmp3;
 						if(op._hx_index == 20) {
-							var _g9 = op.op;
+							var _g14 = op.op;
 							tmp3 = true;
 						} else {
 							tmp3 = false;
@@ -56422,10 +56422,10 @@ hxsl_GlslOut.prototype = {
 					var v37 = this.getFunName(g1,args,e.t);
 					this.buf.b += Std.string(v37);
 					this.buf.b += Std.string("(");
-					var _g13 = 0;
-					while(_g13 < args.length) {
-						var e3 = args[_g13];
-						++_g13;
+					var _g15 = 0;
+					while(_g15 < args.length) {
+						var e3 = args[_g15];
+						++_g15;
 						this.addValue(e3,tabs);
 						this.buf.b += Std.string(", ");
 					}
@@ -56440,9 +56440,9 @@ hxsl_GlslOut.prototype = {
 					} else {
 						var v38 = _g34;
 						var args1 = _g35;
-						var _g17 = v38.e;
-						if(_g17._hx_index == 2) {
-							var g2 = _g17.g;
+						var _g16 = v38.e;
+						if(_g16._hx_index == 2) {
+							var g2 = _g16.g;
 							var v39 = this.getFunName(g2,args1,e.t);
 							this.buf.b += Std.string(v39);
 						} else {
@@ -56467,9 +56467,9 @@ hxsl_GlslOut.prototype = {
 				default:
 					var args2 = _g35;
 					var v40 = _g34;
-					var _g18 = v40.e;
-					if(_g18._hx_index == 2) {
-						var g3 = _g18.g;
+					var _g17 = v40.e;
+					if(_g17._hx_index == 2) {
+						var g3 = _g17.g;
 						var v41 = this.getFunName(g3,args2,e.t);
 						this.buf.b += Std.string(v41);
 					} else {
@@ -56493,9 +56493,9 @@ hxsl_GlslOut.prototype = {
 			} else {
 				var args3 = _g35;
 				var v42 = _g34;
-				var _g19 = v42.e;
-				if(_g19._hx_index == 2) {
-					var g4 = _g19.g;
+				var _g18 = v42.e;
+				if(_g18._hx_index == 2) {
+					var g4 = _g18.g;
 					var v43 = this.getFunName(g4,args3,e.t);
 					this.buf.b += Std.string(v43);
 				} else {
@@ -56521,10 +56521,10 @@ hxsl_GlslOut.prototype = {
 			var regs = _g.regs;
 			var e8 = _g.e;
 			if(e8.t._hx_index == 3) {
-				var _g31 = 0;
-				while(_g31 < regs.length) {
-					var r = regs[_g31];
-					++_g31;
+				var _g19 = 0;
+				while(_g19 < regs.length) {
+					var r = regs[_g19];
+					++_g19;
 					if(r != hxsl_Component.X) {
 						throw new js__$Boot_HaxeError("assert");
 					}
@@ -57134,8 +57134,8 @@ hxsl_Linker.prototype = {
 			case 4:
 				switch(_g1._hx_index) {
 				case 1:
-					var _g9 = _g1.v;
-					var v2 = _g9;
+					var _g11 = _g1.v;
+					var v2 = _g11;
 					if(!this.locals.h.hasOwnProperty(v2.id)) {
 						var e21 = this.mapExprVar(e2);
 						var v3 = this.allocVar(v2,e1.p);
@@ -57144,7 +57144,7 @@ hxsl_Linker.prototype = {
 						}
 						return { e : hxsl_TExprDef.TBinop(op,{ e : hxsl_TExprDef.TVar(v3.v), t : v3.v.type, p : e.p},e21), t : e.t, p : e.p};
 					} else {
-						var v4 = _g9;
+						var v4 = _g11;
 						if(!this.locals.h.hasOwnProperty(v4.id)) {
 							var e11 = this.mapExprVar(e1);
 							var e22 = this.mapExprVar(e2);
@@ -57157,13 +57157,13 @@ hxsl_Linker.prototype = {
 					}
 					break;
 				case 9:
-					var _g11 = _g1.regs;
-					var _g10 = _g1.e;
-					var _g14 = _g10.t;
-					var _g13 = _g10.p;
-					var _g12 = _g10.e;
-					if(_g12._hx_index == 1) {
-						var v6 = _g12.v;
+					var _g3 = _g1.regs;
+					var _g2 = _g1.e;
+					var _g6 = _g2.t;
+					var _g5 = _g2.p;
+					var _g4 = _g2.e;
+					if(_g4._hx_index == 1) {
+						var v6 = _g4.v;
 						if(!this.locals.h.hasOwnProperty(v6.id)) {
 							var e12 = this.mapExprVar(e1);
 							var e23 = this.mapExprVar(e2);
@@ -57179,7 +57179,7 @@ hxsl_Linker.prototype = {
 				}
 				break;
 			case 20:
-				var _g15 = op.op;
+				var _g8 = op.op;
 				switch(_g1._hx_index) {
 				case 1:
 					var v8 = _g1.v;
@@ -57194,13 +57194,13 @@ hxsl_Linker.prototype = {
 					}
 					break;
 				case 9:
-					var _g4 = _g1.regs;
-					var _g3 = _g1.e;
-					var _g7 = _g3.t;
-					var _g6 = _g3.p;
-					var _g5 = _g3.e;
-					if(_g5._hx_index == 1) {
-						var v10 = _g5.v;
+					var _g111 = _g1.regs;
+					var _g10 = _g1.e;
+					var _g14 = _g10.t;
+					var _g13 = _g10.p;
+					var _g12 = _g10.e;
+					if(_g12._hx_index == 1) {
+						var v10 = _g12.v;
 						if(!this.locals.h.hasOwnProperty(v10.id)) {
 							var e14 = this.mapExprVar(e1);
 							var e25 = this.mapExprVar(e2);
@@ -59761,26 +59761,26 @@ hxsl_Splitter.prototype = {
 			var _g7 = _g.op;
 			switch(_g7._hx_index) {
 			case 4:
-				var _g23 = _g8.t;
-				var _g22 = _g8.p;
-				var _g21 = _g8.e;
-				switch(_g21._hx_index) {
+				var _g12 = _g8.t;
+				var _g11 = _g8.p;
+				var _g10 = _g8.e;
+				switch(_g10._hx_index) {
 				case 1:
 					var e1 = _g9;
-					var v1 = _g21.v;
+					var v1 = _g10.v;
 					var inf1 = this.get(v1);
 					inf1.write++;
 					this.checkExpr(e1);
 					break;
 				case 9:
-					var _g26 = _g21.regs;
-					var _g25 = _g21.e;
-					var _g29 = _g25.t;
-					var _g28 = _g25.p;
-					var _g27 = _g25.e;
-					if(_g27._hx_index == 1) {
+					var _g15 = _g10.regs;
+					var _g14 = _g10.e;
+					var _g18 = _g14.t;
+					var _g17 = _g14.p;
+					var _g16 = _g14.e;
+					if(_g16._hx_index == 1) {
 						var e2 = _g9;
-						var v2 = _g27.v;
+						var v2 = _g16.v;
 						var inf2 = this.get(v2);
 						inf2.write++;
 						this.checkExpr(e2);
@@ -59793,14 +59793,14 @@ hxsl_Splitter.prototype = {
 				}
 				break;
 			case 20:
-				var _g10 = _g7.op;
-				var _g13 = _g8.t;
-				var _g12 = _g8.p;
-				var _g11 = _g8.e;
-				switch(_g11._hx_index) {
+				var _g20 = _g7.op;
+				var _g23 = _g8.t;
+				var _g22 = _g8.p;
+				var _g21 = _g8.e;
+				switch(_g21._hx_index) {
 				case 1:
 					var e3 = _g9;
-					var v3 = _g11.v;
+					var v3 = _g21.v;
 					var inf3 = this.get(v3);
 					if(inf3.write == 0) {
 						inf3.requireInit = true;
@@ -59810,14 +59810,14 @@ hxsl_Splitter.prototype = {
 					this.checkExpr(e3);
 					break;
 				case 9:
-					var _g16 = _g11.regs;
-					var _g15 = _g11.e;
-					var _g19 = _g15.t;
-					var _g18 = _g15.p;
-					var _g17 = _g15.e;
-					if(_g17._hx_index == 1) {
+					var _g26 = _g21.regs;
+					var _g25 = _g21.e;
+					var _g29 = _g25.t;
+					var _g28 = _g25.p;
+					var _g27 = _g25.e;
+					if(_g27._hx_index == 1) {
 						var e4 = _g9;
-						var v4 = _g17.v;
+						var v4 = _g27.v;
 						var inf4 = this.get(v4);
 						if(inf4.write == 0) {
 							inf4.requireInit = true;
@@ -59902,8 +59902,8 @@ var Float = Number;
 var Bool = Boolean;
 var Class = { };
 var Enum = { };
-haxe_ds_ObjectMap.count = 0;
 var __map_reserved = {};
+haxe_ds_ObjectMap.count = 0;
 Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function() {
 	return String(this.val);
 }});
