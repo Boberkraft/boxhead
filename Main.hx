@@ -2,41 +2,6 @@ import hxd.Key;
 
 
 class Main extends hxd.App {
-<<<<<<< Updated upstream:Main.hx
-    var bmp : h2d.Bitmap;
-    override function init() {
-        var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
-        tf.text = "Penis!";
-
-        var tile = h2d.Tile.fromColor(0xFF0000, 100, 100);
-
-        bmp = new h2d.Bitmap(tile, s2d);
-
-        bmp.x = s2d.width * 0.5;
-        bmp.y = s2d.height * 0.5;
-
-        bmp.tile.dx = -50;
-        bmp.tile.dy = -50;
-
-        function onEvent(event: hxd.Event) {
-            switch(event.kind) {
-                case EKeyDown: trace('DOWN keyCode: ${event.keyCode}, charCode: ${event.charCode}');
-                case EKeyUp: trace('UP keyCode: ${event.keyCode}, charCode: ${event.charCode}');
-                case _:
-            }
-        }
-        hxd.Window.getInstance().addEventTarget(onEvent);
-    }
-
-    override function update(dt:Float) {
-        if (hxd.Key.isDown(Key.A)) {
-            bmp.rotation -= 0.1;
-        }
-        
-        if (hxd.Key.isDown(Key.D)) {
-            bmp.rotation += 0.1;
-        }
-=======
     var player : Player;
     var background : h2d.Bitmap;
     public static var layers : h2d.Layers;
@@ -59,7 +24,6 @@ class Main extends hxd.App {
     }
 
     override function update(dt:Float) {
->>>>>>> Stashed changes:src/Main.hx
 
         if (Key.isDown(Key.R)) {
             player.setCoordinates(s2d.width/2, s2d.height/2);
@@ -67,12 +31,8 @@ class Main extends hxd.App {
         player.update(dt);
     }
 
-<<<<<<< Updated upstream:Main.hx
-    static function main() {
-=======
     public static function main() {
         hxd.Res.initEmbed();
->>>>>>> Stashed changes:src/Main.hx
         new Main();
     }
 
