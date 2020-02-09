@@ -1,4 +1,5 @@
 -lib heaps
+-cp src
 -js hello.js
 -main Main
 -debug
