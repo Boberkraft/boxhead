@@ -98,6 +98,8 @@ Entity.prototype = {
 		return false;
 	}
 	,update: function(dt) {
+		var old_xr = this.xr;
+		var old_yr = this.yr;
 		this.xr += this.dx * dt;
 		this.yr += this.dy * dt;
 		this.xx = (this.cx + this.xr) * 32;
@@ -106,47 +108,134 @@ Entity.prototype = {
 		this.dy = Math.min(30,this.dy);
 		this.dx *= 0.60;
 		this.dy *= 0.60;
-		if(this.hasCollision(this.cx + 1,this.cy) && this.xr >= 0.7) {
-			haxe_Log.trace(1,{ fileName : "src/Entity.hx", lineNumber : 63, className : "Entity", methodName : "update"});
-			this.xr = 0.7;
-			this.dx = 0;
+		if(this.xr < 0.3) {
+			if(this.hasCollision(this.cx - 1,this.cy)) {
+				haxe_Log.trace(1,{ fileName : "src/Entity.hx", lineNumber : 66, className : "Entity", methodName : "update"});
+				this.stop();
+				this.xr = 0.3;
+			}
 		}
-		if(this.hasCollision(this.cx - 1,this.cy) && this.xr <= 0.3) {
-			haxe_Log.trace(2,{ fileName : "src/Entity.hx", lineNumber : 68, className : "Entity", methodName : "update"});
-			this.xr = 0.3;
-			this.dx = 0;
+		if(this.xr > 0.7) {
+			if(this.hasCollision(this.cx + 1,this.cy)) {
+				haxe_Log.trace(4,{ fileName : "src/Entity.hx", lineNumber : 73, className : "Entity", methodName : "update"});
+				this.stop();
+				this.xr = 0.7;
+			}
 		}
-		if(this.hasCollision(this.cx,this.cy + 1) && this.yr >= 0.7) {
-			haxe_Log.trace(3,{ fileName : "src/Entity.hx", lineNumber : 73, className : "Entity", methodName : "update"});
-			this.yr = 0.7;
-			this.dy = 0;
+		if(this.yr < 0.3) {
+			if(this.hasCollision(this.cx,this.cy - 1)) {
+				haxe_Log.trace(7,{ fileName : "src/Entity.hx", lineNumber : 80, className : "Entity", methodName : "update"});
+				this.stop();
+				this.yr = 0.3;
+			}
 		}
-		if(this.hasCollision(this.cx,this.cy - 1) && this.yr <= 0.3) {
-			haxe_Log.trace(4,{ fileName : "src/Entity.hx", lineNumber : 78, className : "Entity", methodName : "update"});
-			this.yr = 0.3;
-			this.dy = 0;
+		if(0.7 < this.yr) {
+			if(this.hasCollision(this.cx,this.cy + 1)) {
+				haxe_Log.trace(10,{ fileName : "src/Entity.hx", lineNumber : 87, className : "Entity", methodName : "update"});
+				this.stop();
+				this.yr = 0.7;
+			}
+		}
+		if(this.xr < 0.3) {
+			if(this.yr < 0.3) {
+				if(this.hasCollision(this.cx - 1,this.cy - 1)) {
+					haxe_Log.trace(2,{ fileName : "src/Entity.hx", lineNumber : 95, className : "Entity", methodName : "update"});
+					this.stop();
+					if(this.yr > this.xr) {
+						this.yr = 0.3;
+					} else {
+						this.xr = 0.3;
+					}
+				}
+			}
+			if(0.7 < this.yr) {
+				if(this.hasCollision(this.cx - 1,this.cy + 1)) {
+					haxe_Log.trace(3,{ fileName : "src/Entity.hx", lineNumber : 106, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.7;
+				}
+			}
+		}
+		if(this.xr > 0.7) {
+			if(this.yr < 0.3) {
+				if(this.hasCollision(this.cx + 1,this.cy - 1)) {
+					haxe_Log.trace(5,{ fileName : "src/Entity.hx", lineNumber : 115, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.3;
+				}
+			}
+			if(0.7 < this.yr) {
+				if(this.hasCollision(this.cx + 1,this.cy + 1)) {
+					haxe_Log.trace(6,{ fileName : "src/Entity.hx", lineNumber : 122, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.7;
+				}
+			}
+		}
+		if(this.yr < 0.3) {
+			if(this.xr < 0.3) {
+				if(this.hasCollision(this.cx - 1,this.cy - 1)) {
+					haxe_Log.trace(8,{ fileName : "src/Entity.hx", lineNumber : 134, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.3;
+				}
+			}
+			if(0.7 < this.xr) {
+				if(this.hasCollision(this.cx + 1,this.cy)) {
+					haxe_Log.trace(9,{ fileName : "src/Entity.hx", lineNumber : 141, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.3;
+				}
+			}
+		}
+		if(0.7 < this.yr) {
+			if(this.xr < 0.3) {
+				if(this.hasCollision(this.cx - 1,this.cy + 1)) {
+					haxe_Log.trace(11,{ fileName : "src/Entity.hx", lineNumber : 150, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.7;
+				}
+			}
+			if(0.7 < this.xr) {
+				if(this.hasCollision(this.cx + 1,this.cy + 1)) {
+					haxe_Log.trace(12,{ fileName : "src/Entity.hx", lineNumber : 157, className : "Entity", methodName : "update"});
+					this.stop();
+					this.yr = 0.7;
+				}
+			}
 		}
 		var old_cy = this.cy;
 		var old_cx = this.cx;
 		while(this.xr > 1) {
+			haxe_Log.trace("Moved Right",{ fileName : "src/Entity.hx", lineNumber : 218, className : "Entity", methodName : "update"});
 			this.xr--;
 			this.cx++;
 		}
 		while(this.xr < 0) {
+			haxe_Log.trace("Moved Left",{ fileName : "src/Entity.hx", lineNumber : 223, className : "Entity", methodName : "update"});
 			this.xr++;
 			this.cx--;
 		}
 		while(this.yr > 1) {
+			haxe_Log.trace("Moved Down",{ fileName : "src/Entity.hx", lineNumber : 228, className : "Entity", methodName : "update"});
 			this.yr--;
 			this.cy++;
 		}
 		while(this.yr < 0) {
+			haxe_Log.trace("Moved Down",{ fileName : "src/Entity.hx", lineNumber : 233, className : "Entity", methodName : "update"});
 			this.yr++;
 			this.cy--;
 		}
 		if(old_cx != this.cx || old_cy != this.cy) {
-			haxe_Log.trace("[" + this.cx + " " + this.cy + "]",{ fileName : "src/Entity.hx", lineNumber : 117, className : "Entity", methodName : "update"});
+			haxe_Log.trace("[" + this.cx + " " + this.cy + "]",{ fileName : "src/Entity.hx", lineNumber : 239, className : "Entity", methodName : "update"});
 		}
+		if(Math.round(old_xr * 100) != Math.round(this.xr * 100) || Math.round(old_yr * 100) != Math.round(this.yr * 100)) {
+			haxe_Log.trace("[" + this.xr + " " + this.yr + "]",{ fileName : "src/Entity.hx", lineNumber : 243, className : "Entity", methodName : "update"});
+		}
+	}
+	,stop: function() {
+		this.dx = 0;
+		this.dy = 0;
 	}
 	,__class__: Entity
 };
@@ -389,6 +478,13 @@ Main.main = function() {
 	hxd_Res.set_loader(new hxd_res_Loader(new hxd_fs_EmbedFileSystem(haxe_Unserializer.run("oy17:barrel%20copy.psdty10:barrel.pngty8:left.pngty9:right.pngty13:psdbarell.psdty6:up.pngty9:.DS_Storety7:psd.psdty13:up%20copy.psdty14:barrel_top.pngty8:down.pngtg"))));
 	new Main();
 };
+Main.round = function(number,precision) {
+	if(precision == null) {
+		precision = 2;
+	}
+	number *= Math.pow(10,precision);
+	return Math.round(number) / Math.pow(10,precision);
+};
 Main.__super__ = hxd_App;
 Main.prototype = $extend(hxd_App.prototype,{
 	init: function() {
@@ -420,11 +516,11 @@ Main.prototype = $extend(hxd_App.prototype,{
 Math.__name__ = "Math";
 var Player = function(x,y,parent) {
 	Entity.call(this,x,y);
-	haxe_Log.trace(this.xx,{ fileName : "src/Player.hx", lineNumber : 10, className : "Player", methodName : "new"});
-	haxe_Log.trace(this.yy,{ fileName : "src/Player.hx", lineNumber : 11, className : "Player", methodName : "new"});
-	this.bmp = new h2d_Bitmap(h2d_Tile.fromColor(16711680,16,32,null,{ fileName : "src/Player.hx", lineNumber : 14, className : "Player", methodName : "new"}));
-	this.bmp.tile.dx = -8;
-	this.bmp.tile.dy = -32;
+	haxe_Log.trace(this.xx,{ fileName : "src/Player.hx", lineNumber : 11, className : "Player", methodName : "new"});
+	haxe_Log.trace(this.yy,{ fileName : "src/Player.hx", lineNumber : 12, className : "Player", methodName : "new"});
+	this.bmp = new h2d_Bitmap(h2d_Tile.fromColor(16711680,32,32,null,{ fileName : "src/Player.hx", lineNumber : 15, className : "Player", methodName : "new"}));
+	this.bmp.tile.dx = -16;
+	this.bmp.tile.dy = -16;
 	Main.layers.addChildAt(this.bmp,2);
 };
 $hxClasses["Player"] = Player;
@@ -531,6 +627,8 @@ var Solid = function(x,y,parent) {
 	Solid.ALL.push(this);
 	this.sprite = new h2d_Bitmap(Solid.tile);
 	this.sprite_top = new h2d_Bitmap(Solid.tile_top);
+	var hitbox = new h2d_Bitmap(h2d_Tile.fromColor(65280,32,32,0.3,{ fileName : "src/Solid.hx", lineNumber : 28, className : "Solid", methodName : "new"}));
+	Main.layers.addChildAt(hitbox,4);
 	Main.layers.addChildAt(this.sprite,1);
 	Main.layers.addChildAt(this.sprite_top,3);
 	var _this = this.sprite_top;
@@ -545,6 +643,10 @@ var Solid = function(x,y,parent) {
 	var _this3 = this.sprite;
 	_this3.posChanged = true;
 	_this3.y = this.cy * 32;
+	hitbox.posChanged = true;
+	hitbox.x = this.cx * 32;
+	hitbox.posChanged = true;
+	hitbox.y = (this.cy + 1) * 32;
 };
 $hxClasses["Solid"] = Solid;
 Solid.__name__ = "Solid";

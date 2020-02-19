@@ -50,6 +50,8 @@ class Entity {
     }
 
     public function update(dt:Float) {
+        var old_xr = xr;
+        var old_yr = yr;
         xr += dx * dt;
         yr += dy * dt;
         xx = (cx + xr) * 32;
@@ -58,27 +60,143 @@ class Entity {
         dy = Math.min(30, dy);
         dx *= 0.60;
         dy *= 0.60;
+        
+        if (xr < 0.3) {
+            if (hasCollision(cx - 1, cy)) {
+                trace(1);
+                stop();
+                xr = 0.3;
+            }
+        }
+        if (xr > 0.7) {
+            if (hasCollision(cx + 1, cy)) {
+                trace(4);
+                stop();
+                xr = 0.7;
+            }
+        }
+        if (yr < 0.3) {
+            if (hasCollision(cx, cy - 1)) {
+                trace(7);
+                stop();
+                yr = 0.3;
+            }
+        }
+        if (0.7 < yr) {
+            if (hasCollision(cx, cy + 1)) {
+                trace(10);
+                stop();
+                yr = 0.7;
+            }
+        }
+        if (xr < 0.3) {
+            if (yr < 0.3) {
+                if (hasCollision(cx - 1, cy - 1)) {
+                    trace(2);
+                    stop();
+                    if (yr > xr) {
+                        yr = 0.3;
+                    } else {
+                        xr = 0.3;
+                    }
+                }
+            }
+            if (0.7 < yr) {
+                if (hasCollision(cx - 1, cy + 1)) {
+                    trace(3);
+                    stop();
+                    yr = 0.7;
+                }
+            }
+        }
+        if (xr > 0.7) {
+            if (yr < 0.3) {
+                if (hasCollision(cx + 1, cy - 1)) {
+                    trace(5);
+                    stop();
+                    yr = 0.3;
+                }
+            }
+            if (0.7 < yr) {
+                if (hasCollision(cx + 1, cy + 1)) {
+                    trace(6);
+                    stop();
+                    yr = 0.7;
+                }
+            }
+        }
 
-        if (hasCollision(cx + 1, cy) && xr >= 0.7) {
-            trace(1);
-            xr = 0.7;
-            dx = 0;
+
+        // y managment
+        if (yr < 0.3) {
+            if (xr < 0.3) {
+                if (hasCollision(cx - 1, cy - 1)) {
+                    trace(8);
+                    stop();
+                    yr = 0.3;
+                }
+            }
+            if (0.7 < xr) {
+                if (hasCollision(cx + 1, cy)) {
+                    trace(9);
+                    stop();
+                    yr = 0.3;
+                }
+            }
         }
-        if (hasCollision(cx - 1, cy) && xr <= 0.3) {
-            trace(2);
-            xr = 0.3;
-            dx = 0;
+        if (0.7 < yr) {
+            if (xr < 0.3) {
+                if (hasCollision(cx - 1, cy + 1)) {
+                    trace(11);
+                    stop();
+                    yr = 0.7;
+                }
+            }
+            if (0.7 < xr) {
+                if (hasCollision(cx + 1, cy + 1)) {
+                    trace(12);
+                    stop();
+                    yr = 0.7;
+                }
+            }
         }
-        if (hasCollision(cx, cy + 1) && yr >= 0.7) {
-            trace(3);
-            yr = 0.7;
-            dy = 0;
-        }
-        if (hasCollision(cx, cy - 1) && yr <= 0.3) {
-            trace(4);
-            yr = 0.3;
-            dy = 0;
-        }
+        // if (hasCollision(cx + 1, cy) && xr > 0.7) {
+        //     trace(1);
+        //     xr = 0.7;
+        //     dx = 0;
+        // }
+        // if (hasCollision(cx - 1, cy) && xr < 0.3) {
+        //     trace(2);
+        //     trace(2);
+        //     xr = 0.3;
+        //     dx = 0;
+        // }
+        // if (hasCollision(cx, cy + 1) && yr > 0.7) {
+        //     trace(3);
+        //     yr = 0.7;
+        //     dy = 0;
+        // }
+        // if (hasCollision(cx, cy - 1) && yr < 0.3) {
+        //     trace(4);
+        //     yr = 0.3;
+        //     dy = 0;
+        // }
+        // if (hasCollision(cx - 1, cy - 1) && (yr < 0.3 && xr < 0.3)) {
+        //     trace(5);
+        //     dy = 0;
+        //     dx = 0;
+        //     trace(yr);
+        //     trace(xr);
+        //     yr = Math.max(0.3, yr);
+        //     xr = Math.max(0.3, xr);
+        // }
+        // if (hasCollision(cx + 1, cy + 1) && yr < 0.7 && xr < 0.7) {
+        //     trace(5);
+        //     yr = Math.min(0.7, yr);
+        //     xr = Math.min(0.7, xr);
+        //     dy = 0;
+        //     dx = 0;
+        // }
 
         // for (e in ALL) {
         //     if (e != this && Math.abs(cx - e.cx) <= 2 && Math.abs(cy - e.cy) <= 2) {
@@ -97,18 +215,22 @@ class Entity {
         var old_cy = cy;
         var old_cx =  cx;
         while (xr > 1) {
+            trace('Moved Right');
             xr--;
             cx++;
         }
         while (xr < 0) {
+            trace('Moved Left');
             xr++;
             cx--;
         }
         while (yr > 1) {
+            trace('Moved Down');
             yr--;
             cy++;
         }
         while (yr < 0) {
+            trace('Moved Down');
             yr++;
             cy--;
         }
@@ -116,5 +238,14 @@ class Entity {
         if (old_cx != cx || old_cy != cy) {
             trace('[${cx} ${cy}]');
         }
+
+        if (Math.round(old_xr*100) != Math.round(xr*100) || Math.round(old_yr*100) != Math.round(yr*100)) {
+            trace('[${xr} ${yr}]');
+        }
+    }
+
+    public function stop() {
+        dx = 0;
+        dy = 0;
     }
 }
