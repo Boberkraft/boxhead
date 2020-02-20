@@ -3,7 +3,6 @@ import h2d.Bitmap;
 import hxd.Key;
 
 class Player extends Entity {
-
     var bmp : h2d.Bitmap;
     var hitbox : h2d.Bitmap;
     public function new(x, y, parent) {
@@ -19,26 +18,59 @@ class Player extends Entity {
 
         Main.layers.add(bmp, 2);
         // Main.layers.add(hitbox, 4)
+        
+        function onEvent(event : hxd.Event) {
+            switch(event.kind) {
+                case EKeyDown: if (event.keyCode == Key.SPACE) onSpace();
+                case _:
+            }
+        }
+        hxd.Stage.getInstance().addEventTarget(onEvent);
     }
 
+    function onSpace() {
+        new Bullet(this, angle);
+        trace('shoow!');
+    }
     override public function update(dt:Float) {
         
-        var speed = 2;
+        var speed = 3;
+        var dir : Int = null;
+        
         if (Key.isDown(Key.W)) {
-            dy += -speed;
+            dir = 0;
         }
         
         if (Key.isDown(Key.S)) {
-            dy += speed;
+            dir = 180;
         }
         if (Key.isDown(Key.A)) {
-            dx += -speed;
+            if (dir == 180) {
+                dir = dir + 45;
+            } else if (dir == 0) {
+                dir = 270 + 45;
+            } else {
+                dir = 270;
+            }
         }  
 
         if (Key.isDown(Key.D)) {
-            dx += speed;
-            
+            if (dir == 180) {
+                dir = 90 + 45;
+            } else if (dir == 0) {
+                dir = 90 - 45;
+            } else {
+                dir = 90;
+            }
         }
+
+        if (dir != null) {
+            angle = hxd.Math.degToRad(dir);
+            dx = Math.sin(angle) * speed;
+            dy = -Math.cos(angle) * speed;
+            // dy = -Math.sin(dir) * speed;
+        } 
+
         super.update(dt);
         bmp.x = xx;
         bmp.y = yy;

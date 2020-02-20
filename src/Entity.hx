@@ -5,6 +5,8 @@ class Entity {
 
     public var radius : Float = 16;
     public var rotation : Float = 0; // radians
+    public var angle : Float = 0;
+
     public var cx : Int;
     public var cy : Int;
     public var xr : Float;
@@ -174,12 +176,13 @@ class Entity {
             cy--;
         }
 
+        // trace('${Math.round(100*dx)/100} ${Math.round(100*dy)/100}');
         if (old_cx != cx || old_cy != cy) {
             trace('[${cx} ${cy}]');
         }
 
-        if (Math.round(old_xr*100) != Math.round(xr*100) || Math.round(old_yr*100) != Math.round(yr*100)) {
-            trace('[${xr} ${yr}]');
-        }
+        // if (Math.round(old_xr*100) != Math.round(xr*100) || Math.round(old_yr*100) != Math.round(yr*100)) {
+        //     trace('[${xr} ${yr}]');
+        // }
     }
 }

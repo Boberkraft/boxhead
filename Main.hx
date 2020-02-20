@@ -12,7 +12,7 @@ class Main extends hxd.App {
         layers = new h2d.Layers(s2d);
 
         player = new Player(3 * 32, 3 * 32, s2d);
-
+        
         new Solid(3, 10, s2d);
         new Solid(5, 8, s2d);
         new Solid(7, 8, s2d);
@@ -27,6 +27,9 @@ class Main extends hxd.App {
 
         if (Key.isDown(Key.R)) {
             player.setCoordinates(s2d.width/2, s2d.height/2);
+        }
+        for (bullet in Bullet.ALL) {
+            bullet.update(dt);
         }
         player.update(dt);
     }
