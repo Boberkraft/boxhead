@@ -60,8 +60,8 @@ class Entity {
         yy = (cy + yr) * 32;
         dx = Math.min(30, dx);
         dy = Math.min(30, dy);
-        dx *= 0.60;
-        dy *= 0.60;
+        dx *= 0.89;
+        dy *= 0.89;
 
         if (hasCollision(cx - 1, cy + 1) && (0.7 < yr && xr < 0.3)) {
             // left down
