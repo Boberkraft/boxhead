@@ -6,7 +6,8 @@ class Entity {
     public var radius : Float = 16;
     public var rotation : Float = 0; // radians
     public var angle : Float = 0;
-
+    public var moving : Bool = false;
+    
     public var cx : Int;
     public var cy : Int;
     public var xr : Float;
